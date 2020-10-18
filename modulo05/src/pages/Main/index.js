@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { FaGitAlt, FaPlus, FaSpinner } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
 
-import { Container, Form, SubmitButton } from './styles';
+import { Container, Form, SubmitButton, List } from './styles';
 
 export default class Main extends Component {
   state = {
@@ -11,6 +12,24 @@ export default class Main extends Component {
     repositories: [],
     loading: false,
   };
+
+  // Load data from localStorage
+  componentDidMount() {
+    const repositories = localStorage.getItem('repositories');
+
+    if (repositories) {
+      this.setState({ repositories: JSON.parse(repositories) });
+    }
+  }
+
+  // Save data on localStorage
+  componentDidUpdate(_, prevState) {
+    const { repositories } = this.state;
+
+    if (prevState.repositories !== repositories) {
+      localStorage.setItem('repositories', JSON.stringify(repositories));
+    }
+  }
 
   handleInputChange = (e) => {
     this.setState({ newRepo: e.target.value });
@@ -23,21 +42,27 @@ export default class Main extends Component {
 
     const { newRepo, repositories } = this.state;
 
-    const response = await api.get(`repos/${newRepo}`);
+    try {
+      const response = await api.get(`repos/${newRepo}`);
 
-    const data = {
-      name: response.data.full_name,
-    };
+      const data = {
+        name: response.data.full_name,
+        html_url: response.data.html_url,
+      };
 
-    this.setState({
-      newRepo: '',
-      repositories: [...repositories, data],
-      loading: false,
-    });
+      this.setState({
+        newRepo: '',
+        repositories: [...repositories, data],
+        loading: false,
+      });
+    } catch (error) {
+      this.setState({ loading: false });
+      console.error(error);
+    }
   };
 
   render() {
-    const { newRepo, loading } = this.state;
+    const { newRepo, repositories, loading } = this.state;
 
     return (
       <Container>
@@ -62,6 +87,17 @@ export default class Main extends Component {
             )}
           </SubmitButton>
         </Form>
+
+        <List>
+          {repositories.map((repository) => (
+            <li key={repository.name}>
+              <span>{repository.name}</span>
+              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+                Details
+              </Link>
+            </li>
+          ))}
+        </List>
       </Container>
     );
   }
