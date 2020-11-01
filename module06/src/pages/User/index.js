@@ -3,7 +3,9 @@ import { View } from 'react-native';
 
 // import { Container } from './styles';
 
-const User = () => {
+const User = ({ navigation }) => {
+  console.tron.log(navigation.getParam('user'));
+
   return <View />;
 }
 
