@@ -1,3 +1,5 @@
-soma = (a, b) => a + b;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-alert(soma);
+ReactDOM.render(<App />, document.getElementById('root'));
