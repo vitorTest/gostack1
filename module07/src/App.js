@@ -1,17 +1,22 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import GLobalStyle from './styles/global';
 import Header from './components/Header';
 import Routes from './routes';
 
+import store from './store';
+
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
-      <GLobalStyle />
-      <Routes />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Header />
+        <GLobalStyle />
+        <Routes />
+      </BrowserRouter>
+    </Provider>
   );
 }
 
