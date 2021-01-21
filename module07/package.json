@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "immer": "^8.0.1",
     "json-server": "^0.16.3",
     "polished": "^4.0.5",
     "prop-types": "^15.7.2",
